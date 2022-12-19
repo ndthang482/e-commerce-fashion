@@ -1,0 +1,46 @@
+version: "3"
+
+services:
+  discovery:
+    image: discovery-service:latest
+    ports:
+      - 8761:8761
+    build:
+      context: "./discovery-service"
+      dockerfile: "Dockerfile"
+  gateway:
+    image: gateway:latest
+    ports:
+      - 8762:8762
+    build:
+      context: "./gateway"
+      dockerfile: "Dockerfile"
+    depends_on:
+      - discovery
+  auth-service:
+    image: auth-service:latest
+    ports:
+      - 8800:8800
+    build:
+      context: "./auth-service"
+      dockerfile: "Dockerfile"
+    depends_on:
+      - discovery
+  user-service:
+    image: user-service:latest
+    ports:
+      - 8880:8880
+    build:
+      context: "./user-service"
+      dockerfile: "Dockerfile"
+    depends_on:
+      - discovery
+  product:
+    image: product:latest
+    ports:
+      - 8080:8080
+    build:
+      context: "./product"
+      dockerfile: "Dockerfile"
+    depends_on:
+      - discovery

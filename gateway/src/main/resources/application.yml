@@ -1,0 +1,55 @@
+#service:
+#  hostname:
+#    discovery: 192.168.196.207
+#    auth: 192.168.196.207
+#    user: 192.168.196.207
+#    order: 192.168.196.140
+#    product: 192.168.196.106
+#
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders: "*"
+            allowedMethods: "*"
+      routes:
+        - id: auth-service
+          uri:
+            http://localhost:8800/
+          predicates:
+            - Path=/oauth/**, /auth/**
+        - id: user-service
+          uri:
+            http://localhost:8880/
+          predicates:
+            - Path=/user/**
+#        - id: product-service
+#          uri:
+#            http://localhost:8000/
+#          predicates:
+#            - Path=/product/**, /line/**, /branch/**, /inventory/**, /discount/**, /review/**, /category/**
+        - id: product
+          uri:
+            http://localhost:8080/
+          predicates:
+            - Path=/product/**
+        - id: order-service
+          uri:
+            http://localhost:8080/
+          predicates:
+            - Path=/order/**, /cart/**
+
+server:
+  port: 8762
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/

@@ -1,0 +1,38 @@
+#service:
+#  hostname:
+#    discovery: 192.168.196.207
+#    mysql: ${MYSQL_HOST:192.168.196.207}
+
+spring:
+  application:
+    name: auth-service
+  jpa:
+    databasePlatform: org.hibernate.dialect.MySQL5Dialect
+    hibernate:
+      ddlAuto: update
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/shop_iphone?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
+    username: root
+    password: admin123
+server:
+  port: 8800
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+#      defaultZone: http://${service.hostname.discovery}:8761/eureka/
+security:
+  oauth2:
+    client:
+      clientId: client
+#      clientSecret: ENC(48mMvLaMDImeOJFUE/DT0ufm7y9Rcdn/)
+      clientSecret: client@2022
+      accessTokenValiditySeconds: 5000000
+      refreshTokenValiditySeconds: 18000
+encrypt:
+  keyStore:
+    alias: jwt
+#    password: ENC(TQVu0i9dxQgQDOo19OSnKg==)
+    password: god@123

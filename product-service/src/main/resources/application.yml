@@ -1,0 +1,44 @@
+spring:
+  application:
+  name: product-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/shop_iphone?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
+    username: root
+    password: admin123
+  jpa:
+    hibernate:
+      ddl-Auto: update
+server:
+  port: 8000
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8888/eureka/
+security:
+  oauth2:
+    client:
+      clientId: user-service
+      clientSecret: user-service
+      accessTokenUri: http://localhost:8762/oauth/token
+      grant-type: client_credentials
+      scope: server
+    resource:
+      userInfoUri: http://localhost:8762/auth/user
+
+#security:
+#  oauth2:
+#    client:
+#      clientId: user-service
+#      clientSecret: user-service
+#      accessTokenUri: http://${discovery.hostname}:8762/oauth/token
+#      grant-type: client_credentials
+#      scope: server
+#    resource:
+#      userInfoUri: http://${discovery.hostname}:8762/auth/user
+
+#discovery:
+#   hostname: 192.168.196.207
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://${discovery.hostname}:8761/eureka/

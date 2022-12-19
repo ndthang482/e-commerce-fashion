@@ -1,0 +1,49 @@
+#service:
+#    hostname:
+#      discovery: 192.168.196.207
+#      auth: 192.168.196.207
+#      mysql: ${MYSQL_HOST:192.168.196.207}
+#      ui: localhost
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: user-service
+  jpa:
+    databasePlatform: org.hibernate.dialect.MySQL5Dialect
+    hibernate:
+      ddlAuto: update
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/shop_iphone?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
+    url: jdbc:mysql://localhost:3306/shop_iphone?autoReconnect=true&useUnicode=true&characterEncoding=utf8&useSSL=true
+    username: root
+    password: admin123
+  mail:
+    host: smtp.gmail.com
+    username: thangthontien2k@gmail.com
+    password: admin123
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+server:
+  port: 8880
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+security:
+  oauth2:
+    resource:
+      userInfoUri: http://localhost:8762/auth/user
+
+ui:
+  url: http://localhost:3000
+
+passwordResetTokenValidityHours: 24

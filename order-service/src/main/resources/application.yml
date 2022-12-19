@@ -1,0 +1,31 @@
+#discovery:
+#  hostname: 192.168.196.207
+spring:
+  application:
+    name: order-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/shop_iphone?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
+    username: root
+    password: ENC(rftFy/KskFb0rhNzDsVkF/DKuhTHHqGq)
+  jpa:
+    hibernate.ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+server:
+  port: 8080
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8888/eureka/
+
+security:
+  oauth2:
+    client:
+      clientId: order-service
+      clientSecret: order-service
+      accessTokenUri: http://localhost:8762/oauth/token
+      grant-type: client_credentials
+      scope: server
+    resource:
+      userInfoUri: http://localhost:8762/auth/user
