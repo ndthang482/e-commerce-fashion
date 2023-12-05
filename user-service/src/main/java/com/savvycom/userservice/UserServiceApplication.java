@@ -1,6 +1,8 @@
 package com.savvycom.userservice;
 
 
+import com.savvycom.userservice.config.OAuth2FeignInterceptor;
+import feign.RequestInterceptor;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

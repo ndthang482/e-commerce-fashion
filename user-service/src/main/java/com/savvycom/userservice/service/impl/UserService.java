@@ -16,6 +16,7 @@ import com.savvycom.userservice.exception.UserNotFoundException;
 import com.savvycom.userservice.exception.UsernamePasswordIncorrectException;
 import com.savvycom.userservice.repository.UserRepository;
 import com.savvycom.userservice.service.IUserService;
+import com.savvycom.userservice.service.SendMailService;
 import com.savvycom.userservice.service.client.AuthClient;
 import com.savvycom.userservice.util.Mail;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +46,8 @@ public class UserService implements IUserService {
     private final ModelMapper modelMapper;
 
     private final AuthClient authClient;
+
+    private final SendMailService sendMailService;
 
     /**
      * When admin wants to view all users information
@@ -230,15 +233,21 @@ public class UserService implements IUserService {
     public void resetPassword(String passwordResetToken, String newPassword) {
         User user = userRepository.findByPasswordResetToken(passwordResetToken)
                 .orElseThrow(() -> new PasswordResetTokenInvalidException("Token invalid"));
+
         // check token expire time
         if (LocalDateTime.now().isAfter(user.getPasswordResetTokenExpiryDate()))
             throw new PasswordResetTokenInvalidException("Token is expired");
+
         // update password
+        LocalDateTime expiryDate = LocalDateTime.now().plusHours(serviceConfig.getPasswordResetTokenValidityHours());
         user.setPassword(passwordEncoder.encode(newPassword));
-        user.setPasswordResetToken(null);
-        user.setPasswordResetTokenExpiryDate(null);
+        user.setPasswordResetToken(null);  // Assuming you want to reset the token after using it
+        user.setPasswordResetTokenExpiryDate(expiryDate);
         user.setModifiedAt(LocalDateTime.now());
         userRepository.save(user);
+
+        // Send confirmation email
+        sendMailService.sendMail(user.getUsername(), "Password Reset Successful", "Your password has been reset successfully.");
     }
 
     /**

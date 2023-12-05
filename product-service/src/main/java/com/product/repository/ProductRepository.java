@@ -17,10 +17,9 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
     Page<Product> findByProductLineIdIn(List<Long> productLineIds, Pageable pageable);
 
-    Page<Product> findByColorAndSizeAndPriceBetween(String color, String size, Long priceFrom, Long priceTo, Pageable pageable);
+    Page<Product> findByColorAndSizeAndPriceBetween(String color, String memory, Long priceFrom, Long priceTo, Pageable pageable);
 
-
-    Page<Product> findBySizeAndPriceBetween(String size, Long priceFrom, Long priceTo, Pageable pageable);
+    Page<Product> findBySizeAndPriceBetween(String memory, Long priceFrom, Long priceTo, Pageable pageable);
 
     Page<Product> findByColorAndPriceBetween(String color, Long priceFrom, Long priceTo, Pageable pageable);
 

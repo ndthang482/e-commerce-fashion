@@ -12,7 +12,7 @@ import java.util.List;
 public interface ProductClient {
     @GetMapping("/product/{id}")
     Message<Product> findByProductId(@PathVariable Long id);
-    @PostMapping("inventory/quantity")
+    @PostMapping("/product/inventory/quantity")
     void updateQuantities(@RequestBody List<InventoryDTO> inventoryDTOs);
 
 }

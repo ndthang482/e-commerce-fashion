@@ -9,10 +9,11 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
-//@EnableDiscoveryClient
-public class AuthServiceApplication {
+@EnableDiscoveryClient
+//public class AuthServiceApplication implements CommandLineRunner{
+    public class AuthServiceApplication {
 
-    public static void main(String[] args) {
+    public static void main(String[] args){
         SpringApplication.run(AuthServiceApplication.class, args);
     }
 //    @Autowired
@@ -21,9 +22,9 @@ public class AuthServiceApplication {
 //    private PasswordEncoder passwordEncoder;
 //    public void run(String... args) throws Exception {
 //        User user = new User();
-//        user.setUsername("corner99vn@gmail.com");
-//        user.setName("corner");
-//        user.setPassword(passwordEncoder.encode("corner2"));
+//        user.setUsername("thangthontien2k@gmail.com");
+//        user.setName("thang");
+//        user.setPassword(passwordEncoder.encode("admin123"));
 //        user.setRole("admin");
 //        user.setPasswordResetToken("123456");
 //        userRepository.save(user);

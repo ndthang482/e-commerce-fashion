@@ -1,22 +1,21 @@
 spring:
   application:
-  name: product
+  name: product-service
   jpa:
+    hibernate.ddl-auto: update
     show-sql: true
     databasePlatform: org.hibernate.dialect.MySQL5Dialect
-    hibernate:
-      ddlAuto: update
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/shop_iphone?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
     username: root
     password: admin123
 server:
- port: 8080
+ port: 8000
 eureka:
  client:
    serviceUrl:
-     defaultZone: http://localhost:8888/eureka/
+     defaultZone: http://localhost:8761/eureka/
 security:
  oauth2:
    client:

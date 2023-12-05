@@ -29,7 +29,7 @@ public class CartController extends BaseController {
      *
      * @return successResponse + List<CartDTO>
      */
-    @GetMapping
+    @GetMapping()
     @Operation(summary = "Get all carts of the logged in user")
     @ApiResponse(responseCode = HttpStatusCode.OK, description = "Find successfully", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = BaseMessage.class))})
     @ApiResponse(responseCode = HttpStatusCode.BAD_REQUEST, description = "Invalid input", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = BaseMessage.class))})
@@ -49,7 +49,7 @@ public class CartController extends BaseController {
      *
      * @return successResponse
      */
-    @PostMapping
+    @PostMapping()
     @PreAuthorize("@userSecurity.hasUserId(authentication,#cart.userId)")
     @Operation(summary = "Add new cart")
     @ApiResponse(responseCode = HttpStatusCode.OK, description = "Add successfully", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = BaseMessage.class))})

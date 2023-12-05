@@ -1,13 +1,12 @@
 package com.product.service;
 
+import com.product.domain.dto.InventoryDTO;
 import com.product.domain.dto.ProductDTO;
 import com.product.domain.dto.ProductDetailOutput;
 import com.product.domain.dto.ProductResponse;
-import com.product.domain.entity.Image;
-import com.product.domain.entity.Product;
-import com.product.domain.entity.ProductLine;
-import com.product.domain.entity.Review;
+import com.product.domain.entity.*;
 import com.product.repository.ImageRepository;
+import com.product.repository.InventoryRepository;
 import com.product.repository.ProductLineRepository;
 import com.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +16,7 @@ import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,6 +32,8 @@ public class ProductService implements IProductService{
     private final IReviewService reviewService;
 
     private final IImageService imageService;
+
+    private final InventoryRepository inventoryRepository;
 
 
     public ProductDTO productDTO(Product product){
@@ -68,14 +67,21 @@ public class ProductService implements IProductService{
 
     @Override
     public void createProductDetail(ProductDetailOutput productDetailOutput) {
-        ProductLine productLine = ProductLine.builder()
-                .name(productDetailOutput.getName())
+        Product product = productRepository.findById(productDetailOutput.getId()).orElse(null);
+        ProductLine productLine = productLineService.findById(product.getProductLineId());
+        ProductDetailOutput.builder()
+                .size(product.getSize())
+                .color(product.getColor())
+                .productLineId(product.getProductLineId())
+                .productLine(productLine)
+                .productLineId(product.getProductLineId())
+                .inventories(inventoryRepository.findAllByProductId(product.getId()))
                 .active(0L)
                 .createdAt(LocalDateTime.now())
                 .build();
         productLineService.save(productLine);
 
-        Product product = Product.builder()
+        Product.builder()
                 .color(productDetailOutput.getColor())
                 .size(productDetailOutput.getSize())
                 .price(productDetailOutput.getPrice())
@@ -106,7 +112,6 @@ public class ProductService implements IProductService{
         Product product = new Product();
         ProductLine productLine;
                 productLine = ProductLine.builder()
-                        .name(productDetailOutput.getName())
                         .categoryId(1L)
                         .createdAt(LocalDateTime.now())
                         .build();
@@ -149,9 +154,8 @@ public class ProductService implements IProductService{
                         .build();
         productRepository.deleteById(id);
 
-        ProductLine productLine = new ProductLine();
         ProductLine.builder()
-                .name(productDetailOutput.getName())
+                .name(productDetailOutput.getSize())
                 .createdAt(LocalDateTime.now())
                 .build();
         productLineService.deleteById(product.getProductLineId());
@@ -203,16 +207,30 @@ public class ProductService implements IProductService{
         Product product = productRepository.findById(id).orElseThrow(()
                 -> new NotFoundException("Not found product with id "+ id));
         ProductLine productLine = productLineService.findById(product.getProductLineId());
+        List<Inventory> inventories = inventoryRepository.findAllById(Collections.singleton(product.getId()));
         return ProductDetailOutput.builder()
                 .id(product.getId())
-                .name(productLine.getName())
                 .images(imageService.findByProductId(product.getId()))
-                .color(product.getColor())
-                .size(product.getSize())
                 .price(product.getPrice())
-                .review(reviewService.findByProductId(product.getId()))
+                .productLine(productLine)
+                .productLineId(product.getProductLineId())
+                .inventories(inventories)
+                .color(product.getColor())
+                .price(product.getPrice())
                 .createdAt(LocalDateTime.now())
                 .build();
     }
 
+    @Override
+    public void updateQuantities(List<InventoryDTO> inventoryDTOs) {
+        List<Inventory> inventories = inventoryDTOs.stream()
+                .map(inventoryDTO -> {
+                    Inventory inventory = inventoryRepository
+                            .findByBranchIdAndProductId(inventoryDTO.getBranchId(), inventoryDTO.getProductId());
+                    inventory.setQuantity(inventory.getQuantity() - inventoryDTO.getQuantity());
+                    return inventory;
+                })
+                .collect(Collectors.toList());
+        inventoryRepository.saveAll(inventories);
+    }
 }
